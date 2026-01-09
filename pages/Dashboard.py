@@ -706,47 +706,15 @@ if data:
                 fig_pie.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                 st.plotly_chart(fig_pie, use_container_width=True)
 
-                st.markdown("#### Historical Pollutant Trends")
+                st.markdown("#### Historical Pollutant Load")
+
                 pollutant_cols = ['pm2_5', 'pm10', 'no2']
+
                 available_cols = [col for col in pollutant_cols if col in df_hist_idx.columns]
 
-                if available_cols:
-                    # Create the Line Chart
-                    fig_line = px.line(
-                        df_hist_idx.reset_index(), 
-                        x="recorded_at", 
-                        y=available_cols, 
-                        title="24-Hour Pollutant Fluctuations",
-                        template="plotly_dark",
-                        markers=True  # Adds dots to each data point
-                    )
+                fig_area = px.area(df_hist_idx.reset_index(), x="recorded_at", y=available_cols, title="24-Hour Pollutant Volume", template="plotly_dark")
 
-                    # Professional Styling: Make lines smoother and thicker
-                    fig_line.update_traces(line=dict(width=3), marker=dict(size=6))
-                    
-                    # Transparent Background to match your glassmorphism theme
-                    fig_line.update_layout(
-                        plot_bgcolor="rgba(0,0,0,0)", 
-                        paper_bgcolor="rgba(0,0,0,0)",
-                        legend_title_text='Pollutants',
-                        xaxis_title="Time of Recording",
-                        yaxis_title="Concentration (µg/m³)",
-                        hovermode="x unified" # Shows all pollutant values at once when hovering
-                    )
-
-                    st.plotly_chart(fig_line, use_container_width=True)
-                else:
-                    st.info("No specific pollutant data available to graph.")
-                # Line Chart
-                st.markdown("#### 24-Hour AQI Trend Analysis")
-                fig_line = px.line(df_hist_idx.reset_index(), x="recorded_at", y="aqi", title="AQI Stability Tracker", template="plotly_dark")
-                fig_line.update_traces(line=dict(width=4, color="#ef4444"))
-                fig_line.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fig_line, use_container_width=True)
-
-            else:
-                st.info("Historical data is being synchronized for this station.") 
-
+               
                 # Line Chart
                 st.markdown("#### 24-Hour AQI Trend Analysis")
                 fig_line = px.line(df_hist_idx.reset_index(), x="recorded_at", y="aqi", title="AQI Stability Tracker", template="plotly_dark")
